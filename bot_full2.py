@@ -142,20 +142,20 @@ API.change_balance('PRACTICE') # PRACTICE / REAL
 
 while True:
 	try:
-		operacao = int(input('\n Deseja operar na\n  1 - Digital\n  2 - Binaria\n  :: '))
+		operacao = 1
 		
 		if operacao > 0 and operacao < 3 : break
 	except:
 		print('\n Opção invalida')
 
-valor_entrada = float(input(' Indique um valor para entrar: '))
+valor_entrada = 2
 valor_entrada_b = float(valor_entrada)
 
-martingale = int(input(' Indique a quantia de martingales: '))
+martingale = 6
 martingale += 1
 
-stop_loss = float(input(' Indique o valor de Stop Loss: '))
-stop_gain = float(input(' Indique o valor de Stop Gain: '))
+stop_loss = 100
+stop_gain = 150
 
 lucro = 0
 max_mg = 0
