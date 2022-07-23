@@ -148,7 +148,7 @@ while True:
 	except:
 		print('\n Opção invalida')
 
-valor_entrada = 2
+valor_entrada = 20
 valor_entrada_b = float(valor_entrada)
 
 martingale = 6
