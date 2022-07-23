@@ -151,7 +151,7 @@ while True:
 valor_entrada = 20
 valor_entrada_b = float(valor_entrada)
 
-martingale = 6
+martingale = 5
 martingale += 1
 
 stop_loss = 100
