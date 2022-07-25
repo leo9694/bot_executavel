@@ -148,14 +148,14 @@ while True:
 	except:
 		print('\n Opção invalida')
 
-valor_entrada = 20
+valor_entrada = 2
 valor_entrada_b = float(valor_entrada)
 
-martingale = 5
+martingale = 8
 martingale += 1
 
-stop_loss = 100
-stop_gain = 150
+stop_loss = 1100
+stop_gain = 500
 
 lucro = 0
 max_mg = 0
