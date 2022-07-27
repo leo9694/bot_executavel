@@ -162,7 +162,7 @@ API.change_balance('PRACTICE') # PRACTICE / REAL
 
 while True:
 	try:
-		operacao = 2
+		operacao = 1
 		
 		if operacao > 0 and operacao < 3 : break
 	except:
@@ -174,9 +174,8 @@ valor_entrada_b = float(valor_entrada)
 martingale = 8
 martingale += 1
 
-stop_loss = 1500
+stop_loss = 1100
 stop_gain = 1000
-
 lucro = 0
 max_mg = 0
 qtd_mg = 0
