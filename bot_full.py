@@ -162,7 +162,7 @@ API.change_balance('PRACTICE') # PRACTICE / REAL
 
 while True:
 	try:
-		operacao = 1
+		operacao = int(input('\n Deseja operar na\n  1 - Digital\n  2 - Binaria\n  :: '))
 		
 		if operacao > 0 and operacao < 3 : break
 	except:
@@ -176,6 +176,7 @@ martingale += 1
 
 stop_loss = 1100
 stop_gain = 1000
+
 lucro = 0
 max_mg = 0
 qtd_mg = 0
