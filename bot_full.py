@@ -44,9 +44,9 @@ def VerificaTendencia(total, qtd_velas):
 	percentual_verde = round((total.count('g') * 100) / (qtd_velas-1))
 	percentual_vermelha = round((total.count('r') * 100) / (qtd_velas-1))
 
-	if percentual_verde >= 60:
+	if percentual_verde > 60:
 		tendencia = 'call'
-	elif percentual_vermelha >= 60:
+	elif percentual_vermelha > 60:
 		tendencia = 'put'
 	else:
 		tendencia = 'neutro'
@@ -55,7 +55,7 @@ def VerificaTendencia(total, qtd_velas):
 
 
 #Verifica se está em OTC, se estiver muda a estrategia de operação:
-def VerificaOperacao(penta, quadra, triple, total, velas, qtd_velas, paridade):
+def VerificaOperacao(penta, triple, total, velas, qtd_velas, paridade):
 	result = []
 	tendencia = VerificaTendencia(total, qtd_velas)
 
@@ -70,10 +70,26 @@ def VerificaOperacao(penta, quadra, triple, total, velas, qtd_velas, paridade):
 	g = total.count(triple + 'g')
 	r = total.count(triple + 'r')
 
-	if g == 0 and r == 2 and tendencia == 'call':
-		result = [paridade, 'call', penta]
+	if g == 1 and r == 1 and tendencia == 'call':
+		vela_atual = API.get_candles(paridade, 60, 1, time.time())
+		if vela_atual[0]['open'] < vela_atual[0]['close']:
+			result = [paridade, 'call', penta]
+
+	elif g == 1 and r == 1 and tendencia == 'put':
+		vela_atual = API.get_candles(paridade, 60, 1, time.time())
+		if vela_atual[0]['open'] > vela_atual[0]['close']:
+			result = [paridade, 'put', penta]
+
+	elif g == 0 and r == 2 and tendencia == 'call':
+		vela_atual = API.get_candles(paridade, 60, 1, time.time())
+		if vela_atual[0]['open'] < vela_atual[0]['close']:
+			result = [paridade, 'call', penta]
+
 	elif g == 2 and r == 0 and tendencia == 'put':
-		result = [paridade, 'put', penta]
+		vela_atual = API.get_candles(paridade, 60, 1, time.time())
+		if vela_atual[0]['open'] > vela_atual[0]['close']:
+			result = [paridade, 'put', penta]
+
 	else:
 		pass
 
@@ -81,7 +97,7 @@ def VerificaOperacao(penta, quadra, triple, total, velas, qtd_velas, paridade):
 	return result
 
 
-def Operacao(par):
+def Operacao(par, paridade_removida):
 	dir = False
 	qtd_velas = 16
 	result = []
@@ -106,12 +122,17 @@ def Operacao(par):
 			if penta.count('d') >= 1 or penta.count('g') == 5 or penta.count('r') == 5:
 				continue
 
-			result = VerificaOperacao(penta, quadra, triple, total, velas, qtd_velas, paridade)
+			else:
+				result = VerificaOperacao(penta, triple, total, velas, qtd_velas, paridade)
+
+			minutos = float(((datetime.now()).strftime('%M.%S'))[2:])
+			if minutos > 0.26:
+				break
 
 			if result != []:
 				break
 	
-	if len(result) != 0:
+	if len(result) != 0 and result[0] not in paridade_removida:
 		if paridade[7:10] == 'OTC':
 			print('\nOperando em OTC...')
 		print('\nVerificando cores...\n', end='')
@@ -141,7 +162,7 @@ API.change_balance('PRACTICE') # PRACTICE / REAL
 
 while True:
 	try:
-		operacao = 1
+		operacao = 2
 		
 		if operacao > 0 and operacao < 3 : break
 	except:
@@ -153,7 +174,7 @@ valor_entrada_b = float(valor_entrada)
 martingale = 8
 martingale += 1
 
-stop_loss = 1100
+stop_loss = 1500
 stop_gain = 1000
 
 lucro = 0
@@ -168,8 +189,9 @@ while True:
 		print('Hora de entrar?',entrar,'/ Minutos:',minutos, '/ Lucro:', round(lucro, 2), '/ Max MG:', max_mg, ':',qtd_mg,'x')
 
 	if entrar:
+		paridade_removida = []
 		par = API.get_all_open_time()
-		result = Operacao(par)
+		result = Operacao(par, paridade_removida)
 		if len(result) != 0:
 			dir = result[1]
 			paridade = result[0]
@@ -189,9 +211,20 @@ while True:
 					qtd_mg = 0
 				if i != 0 and i == max_mg: 
 					qtd_mg += 1
+
+				if i >= 4:
+					#Salva o horario do maior Martin Gale:
+					minutos = ((datetime.now()).strftime('%H.%M.%S'))
+					dados = 'Gale ' + str(i) + ': ' + minutos + ' / Paridade: ' + str(paridade)
+					f = open("horarios_gale_bot_full.txt", "a")
+					f.write(dados)
+					f.write('\n')
+					f.close()
 	
 				if i > 0:
+					paridade_removida.append(paridade)
 					dir = False
+
 					while True:
 						try:
 							minutos2 = float(((datetime.now()).strftime('%M.%S'))[2:])
@@ -199,7 +232,7 @@ while True:
 							if entrar2:
 								print('\nHora de entrar?',entrar2,'/ Minutos:',minutos2, '/ Lucro:', round(lucro, 2), '/ GALE: ' + str(i), '/ Max MG:', max_mg, ':',qtd_mg,'x')
 								par = API.get_all_open_time()
-								result = Operacao(par)
+								result = Operacao(par, paridade_removida)
 								if len(result) != 0:
 									dir = result[1]
 									paridade = result[0]
@@ -209,12 +242,12 @@ while True:
 							if entrar2:
 								print('\nHora de entrar?',entrar2,'/ Minutos:',minutos2, '/ Lucro:', round(lucro, 2), '/ GALE: ' + str(i), '/ Max MG:', max_mg, ':',qtd_mg,'x')
 								par = API.get_all_open_time()
-								result = Operacao(par)
+								result = Operacao(par, paridade_removida)
 								if len(result) != 0:
 									dir = result[1]
 									paridade = result[0]
 						finally:
-							if dir != False:
+							if dir != False and paridade not in paridade_removida:
 								break
 							else: 
 								time.sleep(0.5)
