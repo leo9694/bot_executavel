@@ -148,8 +148,8 @@ def Operacao(par, paridade_removida):
 while True:
 	#login = input('Informe o seu login: ')
 	#senha = input('Informe sua senha: ')
-	login = 'leop.gabriel9@gmail.com'
-	senha = 'Nossamae123'
+	login = 'vastolordeulq@gmail.com'
+	senha = '666#borabora#'
 	API = IQ_Option(login, senha)
 	API.connect()
 	if API.check_connect():
@@ -168,14 +168,14 @@ while True:
 	except:
 		print('\n Opção invalida')
 
-valor_entrada = 2
+valor_entrada = float(input(' Indique um valor para entrar: '))
 valor_entrada_b = float(valor_entrada)
 
-martingale = 8
+martingale = int(input(' Indique a quantia de martingales: '))
 martingale += 1
 
-stop_loss = 1100
-stop_gain = 1000
+stop_loss = float(input(' Indique o valor de Stop Loss: '))
+stop_gain = float(input(' Indique o valor de Stop Gain: '))
 
 lucro = 0
 max_mg = 0
