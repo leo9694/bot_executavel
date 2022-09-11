@@ -149,8 +149,8 @@ def Operacao(par):
 while True:
 	#login = input('Informe o seu login: ')
 	#senha = input('Informe sua senha: ')
-	login = 'vastolordeulq@gmail.com'
-	senha = '666#borabora#'
+	login = 'leop.gabriel9@gmail.com'
+	senha = 'Nossamae123'
 	API = IQ_Option(login, senha)
 	API.connect()
 	if API.check_connect():
@@ -163,20 +163,20 @@ API.change_balance('PRACTICE') # PRACTICE / REAL
 
 while True:
 	try:
-		operacao = int(input('\n Deseja operar na\n  1 - Digital\n  2 - Binaria\n  :: '))
+		operacao = 1
 		
 		if operacao > 0 and operacao < 3 : break
 	except:
 		print('\n Opção invalida')
 
-valor_entrada = float(input(' Indique um valor para entrar: '))
+valor_entrada = 2
 valor_entrada_b = float(valor_entrada)
 
-martingale = int(input(' Indique a quantia de martingales: '))
+martingale = 7
 martingale += 1
 
-stop_loss = float(input(' Indique o valor de Stop Loss: '))
-stop_gain = float(input(' Indique o valor de Stop Gain: '))
+stop_loss = 500
+stop_gain = 1000
 
 lucro = 0
 max_mg = 0
